@@ -91,7 +91,6 @@ function createPizza(req, res) {
   let name = req.body.name;
   let price = req.body.price;
 
-  console.log(name, price);
   res.send(pizza);
 }
 
