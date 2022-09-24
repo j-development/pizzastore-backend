@@ -109,6 +109,8 @@ function createPizza(req, res) {
   res.send(pizza);
 }
 
+function deletePizza(req, res) {}
+
 function verifyToken(req, res, next) {
   let accessToken = req.headers.authorization.split(' ')[1];
   jwt.verify(accessToken, process.env.ACCESS_SECRET_KEY, (err, decodedUser) => {

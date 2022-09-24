@@ -3,6 +3,11 @@ const jwt = require('jsonwebtoken');
 const express = require('express');
 const router = express.Router();
 
+// Just nu sparas en kopia av refreshTokens in memory på servern
+// Som gör det möjligt att revoka access för användare/inkräktare
+// Bör sparas i en redis datastore eller i någon säker databas i framtiden
+const refreshTokensStore = [];
+
 function login(req, res) {
   //TODO:*Validera inloggningsuppgifer*
   let isValid = true;
@@ -12,7 +17,10 @@ function login(req, res) {
 
   if (isValid) {
     const accessToken = signAccessToken(user);
-    res.json({ access_token: accessToken });
+    const refreshToken = jwt.sign(user, process.env.REFRESH_SECRET_KEY);
+    refreshTokensStore.push(refreshToken);
+    console.log(refreshTokensStore);
+    res.json({ access_token: accessToken, refresh_token: refreshToken });
   }
   if (!isValid) {
     res.status(401);
