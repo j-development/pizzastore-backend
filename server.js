@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const pizzarouter = require('./routes/pizza');
+const authrouter = require('./routes/auth');
 const PORT = 3050;
 
 const app = express(); // Skapar en express applikation
@@ -12,6 +13,7 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/pizza', pizzarouter);
+app.use('/auth', authrouter);
 
 app.get('/', (req, res) => {
   res.json({ res: 'success' });

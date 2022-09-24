@@ -11,12 +11,12 @@ const pizzaGroup = {
 
 let pizzaList = [
   {
-    name: 'Margarita',
+    name: 'MARGARITA',
     price: 80,
     pizzagroup: 1,
   },
   {
-    name: 'Vesuvio',
+    name: 'VESUVIO',
     price: 85,
     pizzagroup: 1,
   },
@@ -94,7 +94,9 @@ function createPizza(req, res) {
   res.send(pizza);
 }
 
+function verifyToken(req, res, next) {}
+
 router.get('/', getPizzas);
-router.post('/', createPizza);
+router.post('/', verifyToken, createPizza);
 
 module.exports = router;
