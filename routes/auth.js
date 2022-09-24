@@ -7,10 +7,7 @@ function login(req, res) {
   //TODO:*Validera inloggningsuppgifer*
   let isValid = true;
 
-  //Tex, skickar in med authorization headern "foo//123"
-  //Då blir username foo och password 123
   const username = req.body.username;
-  console.log(username);
   const user = { username };
 
   if (isValid) {
@@ -24,7 +21,7 @@ function login(req, res) {
 
 function signAccessToken(user) {
   const accessToken = jwt.sign(user, process.env.ACCESS_SECRET_KEY, {
-    expiresIn: '15s',
+    expiresIn: '10m',
   });
   return accessToken;
 }

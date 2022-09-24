@@ -1,3 +1,5 @@
+require('dotenv').config();
+const jwt = require('jsonwebtoken');
 const express = require('express');
 const router = express.Router();
 
@@ -90,11 +92,34 @@ function createPizza(req, res) {
   let pizza;
   let name = req.body.name;
   let price = req.body.price;
+  let pizzagroup = req.body.pizzagroup;
+
+  // Kan vara bra att veta vem som skapat en pizza, ej implementerat ännu
+  let username = req.username;
+
+  if ((name, price, pizzagroup)) {
+    pizza = {
+      name: name.toUpperCase(),
+      price: parseInt(price),
+      pizzagroup: parseInt(pizzagroup),
+    };
+    pizzaList.push(pizza);
+  }
 
   res.send(pizza);
 }
 
-function verifyToken(req, res, next) {}
+function verifyToken(req, res, next) {
+  let accessToken = req.headers.authorization.split(' ')[1];
+  jwt.verify(accessToken, process.env.ACCESS_SECRET_KEY, (err, decodedUser) => {
+    if (err) {
+      console.log(err.message);
+      return res.sendStatus(403);
+    }
+    req.username = decodedUser.username;
+    next();
+  });
+}
 
 router.get('/', getPizzas);
 router.post('/', verifyToken, createPizza);
