@@ -19,7 +19,6 @@ function login(req, res) {
     const accessToken = signAccessToken(user);
     const refreshToken = jwt.sign(user, process.env.REFRESH_SECRET_KEY);
     refreshTokensStore.push(refreshToken);
-    console.log(refreshTokensStore);
     res.json({ access_token: accessToken, refresh_token: refreshToken });
   }
   if (!isValid) {
