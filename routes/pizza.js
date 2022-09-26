@@ -114,7 +114,7 @@ let pizzaList = [
 ];
 
 function getPizzas(req, res) {
-  res.send(pizzaList).sendStatus(200);
+  res.send(pizzaList);
 }
 
 function createPizza(req, res) {
@@ -138,7 +138,7 @@ function createPizza(req, res) {
   res.send(pizza);
 }
 function getPizzaGroups(req, res) {
-  res.send(pizzaGroup).sendStatus(200);
+  res.send(pizzaGroup);
 }
 
 function deletePizza(req, res) {}
