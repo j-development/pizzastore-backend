@@ -141,7 +141,17 @@ function getPizzaGroups(req, res) {
   res.send(pizzaGroup);
 }
 
-function deletePizza(req, res) {}
+function deletePizza(req, res) {
+  const { id } = req.params;
+
+  const index = pizzaList.findIndex((pizza) => {
+    return pizza.id === parseInt(id);
+  });
+
+  let pizza = pizzaList.splice(index, 1);
+
+  res.json(pizza);
+}
 
 function verifyToken(req, res, next) {
   let accessToken = req.headers.authorization.split(' ')[1];
@@ -156,6 +166,7 @@ function verifyToken(req, res, next) {
 }
 
 router.get('/', getPizzas);
+router.delete('/:id', deletePizza);
 router.get('/groups', getPizzaGroups);
 router.post('/', verifyToken, createPizza);
 
