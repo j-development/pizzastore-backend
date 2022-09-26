@@ -145,12 +145,12 @@ function deletePizza(req, res) {}
 
 function verifyToken(req, res, next) {
   let accessToken = req.headers.authorization.split(' ')[1];
-  jwt.verify(accessToken, process.env.ACCESS_SECRET_KEY, (err, decodedUser) => {
+  jwt.verify(accessToken, process.env.ACCESS_SECRET_KEY, (err, decodedJWT) => {
     if (err) {
       console.log(err.message);
-      return res.sendStatus(403);
+      return res.status(403).send(err);
     }
-    req.username = decodedUser.username;
+    req.username = decodedJWT.username;
     next();
   });
 }
