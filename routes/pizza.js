@@ -128,6 +128,7 @@ function createPizza(req, res) {
 
   if ((name, price, pizzagroup)) {
     pizza = {
+      id: pizzaList.length + 1,
       name: name.toUpperCase(),
       price: parseInt(price),
       pizzagroup: parseInt(pizzagroup),
