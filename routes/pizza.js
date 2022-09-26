@@ -3,13 +3,28 @@ const jwt = require('jsonwebtoken');
 const express = require('express');
 const router = express.Router();
 
-const pizzaGroup = {
-  1: 'Pizza grupp 1',
-  2: 'Pizza grupp 2',
-  3: 'Inbakade pizzor',
-  4: 'Halvinbakade pizzor',
-  5: 'Kebabpizzor',
-};
+const pizzaGroup = [
+  {
+    id: 1,
+    name: 'Pizza grupp 1',
+  },
+  {
+    id: 2,
+    name: 'Pizza grupp 2',
+  },
+  {
+    id: 3,
+    name: 'Inbakade pizzor',
+  },
+  {
+    id: 4,
+    name: 'Halvinbakade pizzor',
+  },
+  {
+    id: 5,
+    name: 'Kebabpizzor',
+  },
+];
 
 let pizzaList = [
   {
@@ -99,7 +114,7 @@ let pizzaList = [
 ];
 
 function getPizzas(req, res) {
-  res.send(pizzaList);
+  res.send(pizzaList).sendStatus(200);
 }
 
 function createPizza(req, res) {
@@ -122,6 +137,9 @@ function createPizza(req, res) {
 
   res.send(pizza);
 }
+function getPizzaGroups(req, res) {
+  res.send(pizzaGroup).sendStatus(200);
+}
 
 function deletePizza(req, res) {}
 
@@ -138,6 +156,7 @@ function verifyToken(req, res, next) {
 }
 
 router.get('/', getPizzas);
+router.get('/groups', getPizzaGroups);
 router.post('/', verifyToken, createPizza);
 
 module.exports = router;
