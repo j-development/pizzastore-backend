@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const pizzarouter = require('./routes/pizza');
 const authrouter = require('./routes/auth');
+var bodyParser = require('body-parser');
 const PORT = 3050;
 
 const app = express(); // Skapar en express applikation
@@ -10,7 +11,10 @@ app.use(cors());
 
 // Gör att vi kan få ut body-data från put och post-requests,
 // samma funktionalitet som body-parser fast vi slipper installera ett extra package.
-app.use(express.urlencoded({ extended: true }));
+// app.use(express.urlencoded({ extended: true }));
+
+//app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.use('/pizza', pizzarouter);
 app.use('/auth', authrouter);

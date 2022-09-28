@@ -2,122 +2,15 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const express = require('express');
 const router = express.Router();
+const db = require('../repository');
 
-const pizzaGroup = [
-  {
-    id: 1,
-    name: 'Pizza grupp 1',
-  },
-  {
-    id: 2,
-    name: 'Pizza grupp 2',
-  },
-  {
-    id: 3,
-    name: 'Inbakade pizzor',
-  },
-  {
-    id: 4,
-    name: 'Halvinbakade pizzor',
-  },
-  {
-    id: 5,
-    name: 'Kebabpizzor',
-  },
-];
-
-let pizzaList = [
-  {
-    id: 1,
-    name: 'MARGARITA',
-    price: 80,
-    pizzagroup: 1,
-  },
-  {
-    id: 2,
-    name: 'VESUVIO',
-    price: 85,
-    pizzagroup: 1,
-  },
-  {
-    id: 3,
-    name: 'CAPRICCIOSA',
-    price: 90,
-    pizzagroup: 2,
-  },
-  {
-    id: 4,
-    name: 'SALAMI',
-    price: 90,
-    pizzagroup: 2,
-  },
-  {
-    id: 5,
-    name: 'TOMASO',
-    price: 90,
-    pizzagroup: 2,
-  },
-  {
-    id: 6,
-    name: 'HAWAII',
-    price: 90,
-    pizzagroup: 2,
-  },
-  {
-    id: 7,
-    name: 'CALZONE',
-    price: 95,
-    pizzagroup: 3,
-  },
-  {
-    id: 8,
-    name: 'CALZONE KEBAB',
-    price: 100,
-    pizzagroup: 3,
-  },
-  {
-    id: 9,
-    name: 'MILANO SPECIAL',
-    price: 100,
-    pizzagroup: 3,
-  },
-  {
-    id: 10,
-    name: 'PALERMO',
-    price: 100,
-    pizzagroup: 4,
-  },
-  {
-    id: 11,
-    name: 'BAGAREN SPECIAL',
-    price: 100,
-    pizzagroup: 4,
-  },
-  {
-    id: 12,
-    name: 'KEBABPIZZA',
-    price: 100,
-    pizzagroup: 5,
-  },
-  {
-    id: 13,
-    name: 'HOCKEYPIZZA',
-    price: 105,
-    pizzagroup: 5,
-  },
-  {
-    id: 14,
-    name: 'FAVORIT',
-    price: 100,
-    pizzagroup: 5,
-  },
-];
-
-function getPizzas(req, res) {
-  res.send(pizzaList);
+async function getPizzas(req, res) {
+  const query = 'SELECT * FROM pizza';
+  let dbres = await db.pool.query(query);
+  res.send(dbres.rows);
 }
 
-function createPizza(req, res) {
+async function createPizza(req, res) {
   let pizza;
   let name = req.body.name;
   let price = req.body.price;
@@ -128,30 +21,52 @@ function createPizza(req, res) {
 
   if ((name, price, pizzagroup)) {
     pizza = {
-      id: pizzaList.length + 1,
       name: name.toUpperCase(),
       price: parseInt(price),
       pizzagroup: parseInt(pizzagroup),
     };
-    pizzaList.push(pizza);
+
+    const query =
+      'INSERT INTO pizza (name, price, pizzagroup_id) VALUES ($1::TEXT, $2::INT, $3::INT)';
+    const values = [pizza.name, pizza.price, pizza.pizzagroup];
+    let dbres = await db.pool.query(query, values);
   }
 
   res.send(pizza);
 }
-function getPizzaGroups(req, res) {
-  res.send(pizzaGroup);
+async function getPizzaGroups(req, res) {
+  const query = 'SELECT * FROM pizzagroup';
+  let dbres = await db.pool.query(query);
+  res.send(dbres.rows);
 }
 
-function deletePizza(req, res) {
+async function deletePizza(req, res) {
   const { id } = req.params;
 
-  const index = pizzaList.findIndex((pizza) => {
-    return pizza.id === parseInt(id);
-  });
+  const query = `DELETE FROM pizza WHERE id=${id}`;
+  let dbres;
+  try {
+    dbres = await db.pool.query(query);
+  } catch (error) {
+    console.log(error);
+  }
 
-  let pizza = pizzaList.splice(index, 1);
+  res.json({ success: true, msg: `Pizza deleted with Id: ${id}` });
+}
 
-  res.json(pizza);
+async function createOrder(req, res) {
+  let customerName = req.body.customer_name;
+  let cost = await pizzaTotalCost(req.body.itemList);
+  console.log(customerName, cost);
+  const query =
+    'INSERT INTO orders (cost, customer_name) VALUES ($1::INT, $2::TEXT) RETURNING id';
+  const values = [cost, customerName];
+  let dbres = await db.pool.query(query, values);
+
+  let order_id = dbres.rows[0].id;
+
+  //TODO:Implementation av entries till order_pizza join-tablen
+  res.json({ success: true, order_id: order_id });
 }
 
 function verifyToken(req, res, next) {
@@ -166,9 +81,33 @@ function verifyToken(req, res, next) {
   });
 }
 
+//Hämta en pizza med Id
+// async function getPizza(id) {
+//   const query = `SELECT * FROM pizza WHERE id=${id}`;
+//   let dbres = await db.pool.query(query);
+//   return dbres.rows;
+// }
+
+async function pizzaTotalCost(itemList) {
+  let totalcost = 0;
+  const query = `SELECT id,price FROM pizza`;
+
+  const pizzaCostList = await db.pool.query(query);
+
+  itemList.forEach((item) => {
+    let price = pizzaCostList.rows.filter((pizza) => {
+      return pizza.id === item.pizza_id;
+    })[0].price;
+    totalcost += price * item.quantity;
+  });
+
+  return totalcost;
+}
+
 router.get('/', getPizzas);
 router.delete('/:id', deletePizza);
 router.get('/groups', getPizzaGroups);
 router.post('/', verifyToken, createPizza);
+router.post('/order', createOrder);
 
 module.exports = router;
