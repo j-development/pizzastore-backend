@@ -81,13 +81,6 @@ function verifyToken(req, res, next) {
   });
 }
 
-//Hämta en pizza med Id
-// async function getPizza(id) {
-//   const query = `SELECT * FROM pizza WHERE id=${id}`;
-//   let dbres = await db.pool.query(query);
-//   return dbres.rows;
-// }
-
 async function pizzaTotalCost(itemList) {
   let totalcost = 0;
   const query = `SELECT id,price FROM pizza`;
