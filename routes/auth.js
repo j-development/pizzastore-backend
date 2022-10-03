@@ -2,27 +2,48 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcrypt');
 
 // Just nu sparas en kopia av refreshTokens in memory på servern
 // Som gör det möjligt att revoka access för användare/inkräktare
 // Bör sparas i en redis datastore eller i någon säker databas i framtiden
 const refreshTokensStore = [];
 
-function login(req, res) {
-  //TODO:*Validera inloggningsuppgifer*
-  let isValid = true;
+const users = [];
 
+async function seedUser(username, password) {
+  try {
+    const salt = await bcrypt.genSalt();
+    const encryptedPW = await bcrypt.hash(password, salt);
+
+    users.push({ username: username, password: encryptedPW });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+seedUser('foo', '123');
+
+async function login(req, res) {
+  if (!req.body.username || !req.body.password)
+    return res.status(500).json({ message: 'Did not receive credentials' });
+  //TODO:*Validera inloggningsuppgifer*
   const username = req.body.username;
-  const user = { username };
+
+  const user = users.find((user) => {
+    return username === user.username;
+  });
+  let isValid = await bcrypt.compare(req.body.password, user.password);
 
   if (isValid) {
+    const user = { username };
     const accessToken = signAccessToken(user);
-    // const refreshToken = jwt.sign(user, process.env.REFRESH_SECRET_KEY);
     const refreshToken = signRefreshToken(user);
     refreshTokensStore.push(refreshToken);
     res.json({ access_token: accessToken, refresh_token: refreshToken });
   }
   if (!isValid) {
+    console.log('Did not validate');
     res.status(401);
   }
 }

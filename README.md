@@ -1,4 +1,4 @@
-# PizzaStore backend projec
+# PizzaStore backend project
 
 The backend part of the PizzaStore project, made with NodeJS, ExpressJS
 

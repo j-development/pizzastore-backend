@@ -75,7 +75,6 @@ async function deletePizza(req, res) {
 async function createOrder(req, res) {
   let customerName = req.body.customer_name;
   let cost = await pizzaTotalCost(req.body.itemList);
-  console.log(customerName, cost);
   const query =
     'INSERT INTO orders (cost, customer_name) VALUES ($1::INT, $2::TEXT) RETURNING id';
   const values = [cost, customerName];
