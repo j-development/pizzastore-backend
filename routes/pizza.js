@@ -6,8 +6,14 @@ const db = require('../repository');
 
 async function getPizzas(req, res) {
   const query = 'SELECT * FROM pizza';
-  let dbres = await db.pool.query(query);
-  res.send(dbres.rows);
+  let dbres;
+  try {
+    dbres = await db.pool.query(query);
+    res.send(dbres.rows);
+  } catch (error) {
+    console.log(error);
+    res.json({ error: true });
+  }
 }
 
 async function createPizza(req, res) {
@@ -29,15 +35,27 @@ async function createPizza(req, res) {
     const query =
       'INSERT INTO pizza (name, price, pizzagroup_id) VALUES ($1::TEXT, $2::INT, $3::INT)';
     const values = [pizza.name, pizza.price, pizza.pizzagroup];
-    let dbres = await db.pool.query(query, values);
+
+    let dbres;
+    try {
+      dbres = await db.pool.query(query, values);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   res.send(pizza);
 }
 async function getPizzaGroups(req, res) {
   const query = 'SELECT * FROM pizzagroup';
-  let dbres = await db.pool.query(query);
-  res.send(dbres.rows);
+
+  try {
+    let dbres = await db.pool.query(query);
+    res.send(dbres.rows);
+  } catch (error) {
+    console.log(error);
+    res.json({ error: true });
+  }
 }
 
 async function deletePizza(req, res) {
@@ -61,7 +79,13 @@ async function createOrder(req, res) {
   const query =
     'INSERT INTO orders (cost, customer_name) VALUES ($1::INT, $2::TEXT) RETURNING id';
   const values = [cost, customerName];
-  let dbres = await db.pool.query(query, values);
+
+  let dbres;
+  try {
+    dbres = await db.pool.query(query, values);
+  } catch (error) {
+    console.log(error);
+  }
 
   let order_id = dbres.rows[0].id;
 
@@ -85,7 +109,13 @@ async function pizzaTotalCost(itemList) {
   let totalcost = 0;
   const query = `SELECT id,price FROM pizza`;
 
-  const pizzaCostList = await db.pool.query(query);
+  let pizzaCostList;
+  try {
+    pizzaCostList = await db.pool.query(query);
+  } catch (error) {
+    console.log(error);
+    res.json({ error: true });
+  }
 
   itemList.forEach((item) => {
     let price = pizzaCostList.rows.filter((pizza) => {

@@ -13,7 +13,7 @@ app.use(cors());
 // samma funktionalitet som body-parser fast vi slipper installera ett extra package.
 // app.use(express.urlencoded({ extended: true }));
 
-//app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use('/pizza', pizzarouter);
