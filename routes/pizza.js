@@ -46,6 +46,38 @@ async function createPizza(req, res) {
 
   res.send(pizza);
 }
+
+async function updatePizza(req, res) {
+  let pizza;
+  let id = req.body.id;
+  let name = req.body.name;
+  let price = req.body.price;
+  let pizzagroup = req.body.pizzagroup;
+
+  if ((name, price, pizzagroup, id)) {
+    pizza = {
+      name: name.toUpperCase(),
+      id: parseInt(id),
+      price: parseInt(price),
+      pizzagroup: parseInt(pizzagroup),
+    };
+
+    const query = `UPDATE "pizza" 
+    SET "name" = $1, "price" = $2, "pizzagroup_id" = $3
+    WHERE "id" = $4`;
+    const values = [pizza.name, pizza.price, pizza.pizzagroup, pizza.id];
+
+    let dbres;
+    try {
+      dbres = await db.pool.query(query, values);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  res.send(pizza);
+}
+
 async function getPizzaGroups(req, res) {
   const query = 'SELECT * FROM pizzagroup';
 
@@ -130,6 +162,7 @@ router.get('/', getPizzas);
 router.delete('/:id', deletePizza);
 router.get('/groups', getPizzaGroups);
 router.post('/', verifyToken, createPizza);
+router.put('/', verifyToken, updatePizza);
 router.post('/order', createOrder);
 
 module.exports = router;

@@ -33,7 +33,11 @@ async function login(req, res) {
   const user = users.find((user) => {
     return username === user.username;
   });
-  let isValid = await bcrypt.compare(req.body.password, user.password);
+  
+  let isValid = false;
+  if(user != null){
+    isValid = await bcrypt.compare(req.body.password, user.password);
+  }
 
   if (isValid) {
     const user = { username };
