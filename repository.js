@@ -4,7 +4,7 @@ const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
   database: 'pizzadb',
-  password: 'postgres',
+  password: 'password',
   port: 5432,
 });
 

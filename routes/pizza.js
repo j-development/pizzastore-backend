@@ -105,6 +105,9 @@ async function deletePizza(req, res) {
 }
 
 async function createOrder(req, res) {
+  if (!req.body.customer_name || !req.body.itemList)
+    return res.status(500).json({ message: 'Something went wrong' });
+
   let customerName = req.body.customer_name;
   let cost = await pizzaTotalCost(req.body.itemList);
   const query =
