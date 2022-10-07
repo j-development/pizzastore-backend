@@ -27,15 +27,14 @@ seedUser('foo', '123');
 async function login(req, res) {
   if (!req.body.username || !req.body.password)
     return res.status(500).json({ message: 'Did not receive credentials' });
-  //TODO:*Validera inloggningsuppgifer*
   const username = req.body.username;
 
   const user = users.find((user) => {
     return username === user.username;
   });
-  
+
   let isValid = false;
-  if(user != null){
+  if (user != null) {
     isValid = await bcrypt.compare(req.body.password, user.password);
   }
 

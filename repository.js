@@ -8,6 +8,7 @@ const pool = new Pool({
   port: 5432,
 });
 
+// Saved for later use if we needed to seed data to a new DB.
 let pizzaList = [
   {
     id: 1,
