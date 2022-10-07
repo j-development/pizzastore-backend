@@ -41,4 +41,6 @@ pizzaTotalCost() är en helperfunction som hjälper oss räkna ut priset på en 
 
 ## allmänt
 
-Paket som använts förutom det som nämnts är pg för databas implementationen, nodemon för quality of life förbättring när vi utvecklar och dotenv för environment-variabler. I vår .env-fil håller vi våra secrets till jwt-tokens.
+Paket som använts förutom det som nämnts är pg för databas implementationen, nodemon för quality of life förbättring när vi utvecklar och dotenv för environment-variabler. I vår .env-fil håller vi våra secrets till jwt-tokens, de ska ju såklart inte skickas med så som det görs nu men för smidighetens skull under utveckling så har vi det så.
+
+Som skrivits som kommenter i auth.js så bör inte refreshTokensStore sparas in-memory i en array så som gjorts. Det borde i en riktig implementation sparas i en säker databas eller i en redis-store.
