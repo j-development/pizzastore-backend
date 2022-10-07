@@ -18,9 +18,7 @@ async function getPizzas(req, res) {
 
 async function createPizza(req, res) {
   let pizza;
-  let name = req.body.name;
-  let price = req.body.price;
-  let pizzagroup = req.body.pizzagroup;
+  let { name, price, pizzagroup } = req.body;
 
   // Kan vara bra att veta vem som skapat en pizza, ej implementerat ännu
   let username = req.username;
@@ -49,10 +47,7 @@ async function createPizza(req, res) {
 
 async function updatePizza(req, res) {
   let pizza;
-  let id = req.body.id;
-  let name = req.body.name;
-  let price = req.body.price;
-  let pizzagroup = req.body.pizzagroup;
+  let { id, name, price, pizzagroup } = req.body;
 
   if ((name, price, pizzagroup, id)) {
     pizza = {
@@ -128,6 +123,8 @@ async function createOrder(req, res) {
 }
 
 function verifyToken(req, res, next) {
+  if (!req.headers.authorization)
+    return res.status(401).json({ message: 'authorization failed' });
   let accessToken = req.headers.authorization.split(' ')[1];
   jwt.verify(accessToken, process.env.ACCESS_SECRET_KEY, (err, decodedJWT) => {
     if (err) {
@@ -162,7 +159,7 @@ async function pizzaTotalCost(itemList) {
 }
 
 router.get('/', getPizzas);
-router.delete('/:id', deletePizza);
+router.delete('/:id', verifyToken, deletePizza);
 router.get('/groups', getPizzaGroups);
 router.post('/', verifyToken, createPizza);
 router.put('/', verifyToken, updatePizza);
