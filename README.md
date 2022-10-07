@@ -4,7 +4,7 @@ The backend part of the PizzaStore project, made with NodeJS, ExpressJS
 
 ## Start server with npm run dev
 
-npm run dev
+`npm run dev`
 
 ---
 
@@ -38,5 +38,7 @@ createPizza() skapar ny pizza, kräver accessToken via verifyToken-middleware.
 updatePizza() uppdaterar en pizza, kräver accessToken som ovan
 deletePizza() raderar en pizza, samma som ovan
 pizzaTotalCost() är en helperfunction som hjälper oss räkna ut priset på en order. Som en förbättring hade vi kunnat extrahera ut denna funktion till en utility module i framtiden.
+
+## allmänt
 
 Paket som använts förutom det som nämnts är pg för databas implementationen, nodemon för quality of life förbättring när vi utvecklar och dotenv för environment-variabler. I vår .env-fil håller vi våra secrets till jwt-tokens.
