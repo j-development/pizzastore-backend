@@ -41,7 +41,13 @@ Här har vi options som vi använder när vi connectar till våran sql-databas (
 
 ## databas
 
-Databasen vi använder är en Postgres relationsdatabas, vi använde postgres för att det är en RDBMS som vi tidigare båda jobbat med och som vi då föredrar att använda.
+Databasen vi använde är en Postgres relationsdatabas, vi använde Postgres RDBMS för att det är en SQL databas
+som vi båda använt tidigare och som har ett trevligt GUI-verktyg (pgAdmin) som gör det lite enklare för oss att använda. Vi hade också ganska enkla specifikationer på vår databas, vi behövde spara ner pizzagrupper, pizzor och ordrar, inga krav på några utstuderade relationer som där en graph-databas hade varit en intressant sak att utforska. Att spara ner dessa objekt i tabeller skulle funka alldeles utmärkt kände vi, så därför föll valet på en SQL relationsdatabas.
+
+<img width="1026" alt="image" src="https://user-images.githubusercontent.com/83879466/194750253-d70a0ecf-925a-4748-8ce0-ab798188f0e8.png">
+
+Vi skapade 4 tabeller med kolumner utifrån de objekt vi hanterar i backenden. Den första tabellen i bilden "order_pizza" är en join-table som i nuvarande implementation inte används. Vi lade till den för att kunna spara och se vilka pizzor och hur många som ingår i en specifik order. I en mer fullständig version av detta projektet hade vi använt det till exempel i en funktion där klienten kan se sina gamla ordrar. I "orders"-tabellen så har vi en kolumn med en delivered-flagga som inte heller är implementerad just nu i backenden. Men den skulle isåfall användas av en admin som kan markera en order som levererad.
+
 
 ## allmänt
 
