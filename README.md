@@ -8,6 +8,9 @@ The backend part of the PizzaStore project, made with NodeJS, ExpressJS
 
 ---
 
+# Rapport - Frontend
+Rapport för frontenden hittar du i README.md i projektet pizzastore-frontend: https://gitlab.com/g720/pizzastore-frontend
+
 # Rapport - Backend
 
 ## server.js
