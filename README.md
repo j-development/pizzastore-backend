@@ -26,10 +26,6 @@ refreshTokens() är funktionen som gör detta. Klienten skickar en request till 
 
 verifyToken() funktionen är en enkel verifieringsfunktion till accessToken.
 
-## repository.js
-
-Här har vi options som vi använder när vi connectar till våran sql-databas (Postgres)
-
 ## pizza.js
 
 getPizzas() hämtar alla våra pizzor från databasen och returnerar
@@ -38,6 +34,14 @@ createPizza() skapar ny pizza, kräver accessToken via verifyToken-middleware.
 updatePizza() uppdaterar en pizza, kräver accessToken som ovan
 deletePizza() raderar en pizza, samma som ovan
 pizzaTotalCost() är en helperfunction som hjälper oss räkna ut priset på en order. Som en förbättring hade vi kunnat extrahera ut denna funktion till en utility module i framtiden.
+
+## repository.js
+
+Här har vi options som vi använder när vi connectar till våran sql-databas (Postgres)
+
+## databas
+
+Databasen vi använder är en Postgres relationsdatabas, vi använde postgres för att det är en RDBMS som vi tidigare båda jobbat med och som vi då föredrar att använda.
 
 ## allmänt
 
